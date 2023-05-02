@@ -1,7 +1,10 @@
+const express = require('express');
 const http = require('http');
 const url = require('url');
 const fs = require('fs');
 const ejs = require('ejs');
+const app = express();
+
 
 const server = http.createServer();
 
@@ -23,11 +26,18 @@ server.on('request', function(request, response) {
             
             break ;
         case '/about' : 
-            fs.readFile(__dirname + "\\aboutMe.ejs", (error, content) => {
-                console.log(error);
-                response.end(content);
+            ejs.renderFile(__dirname + "\\aboutMe.ejs", {title: 'aboutMe'}, (error, content) => {
+              console.log(error);
+              response.end(content);
             })
-
+            
+            break ;
+        case '/error404' : 
+            ejs.renderFile(__dirname + "\\Error404.ejs", {title: 'Error404'}, (error, content) => {
+              console.log(error);
+              response.end(content);
+            })
+            
             break ;
         default : {
             response.writeHead(404,{"Content-Type": "text/html; charset=UTF-8"}) ;
