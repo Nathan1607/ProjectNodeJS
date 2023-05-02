@@ -1,0 +1,12 @@
+<script>
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+    const username = sessionStorage.getItem('username');
+    if (isLoggedIn && username) {
+      const welcomeMessage = document.createElement('p');
+      welcomeMessage.textContent = `Bienvenue ${username}`;
+      document.body.appendChild(welcomeMessage);
+    } else {
+      window.location.href = 'login.ejs';
+    }
+  </script>
+  
