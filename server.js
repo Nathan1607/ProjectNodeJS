@@ -14,17 +14,45 @@ const port = 8080
 
 //Routes du site
 app.get('/tchat', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  ejs.renderFile(__dirname + '\\tchat.ejs', {title: 'Tchat'}, (error, content) => {
+    console.log(error);
+    res.end(content);
+  });
 });
 
 app.get('/', (req, res) => {
-  ejs.renderFile(__dirname + "\\home.ejs", {title: 'home'}, (error, content) => {
+    ejs.renderFile(__dirname + "\\home.ejs", {title: 'home'}, (error, content) => {
+    console.log(error);
+    res.end(content);
+  })
+});
+
+
+
+
+
+
+app.get('/error404', (req, res) => {
+  ejs.renderFile(__dirname + "\\error.ejs", {title: 'Erreur'}, (error, content) => {
     console.log(error);
     res.end(content);
   }) 
 });
 
+// Route for Download a file
+app.get('/download', (req, res) => {
+  const file = `${__dirname}/pdf/CV-Nathan_Gaulard.pdf`;
+  res.download(file);
+}); 
 
+// Route for dynamic URL -> à utiliser
+app.get('/:id', (req, res) => {
+  const id = req.params.id;
+  ejs.renderFile(__dirname + '\\dynamic.ejs', {title: 'Dynamic URL', id}, (error, content) => {
+    console.log(error);
+    res.end(content);
+  });
+});
 
 
 
@@ -69,6 +97,7 @@ app.get('/admin', (req, res) => {
     res.redirect('/');
   }
 });
+
 
 //Deconnexion
 app.post('/logout', (req, res) => {
