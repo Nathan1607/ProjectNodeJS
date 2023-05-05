@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const url = require('url');
 const fs = require('fs');
 const ejs = require('ejs');
@@ -10,6 +11,12 @@ const { Server } = require("socket.io");
 const { error } = require('console');
 const io = new Server(server);
 const port = 8080
+
+
+//Test Cookie for pseudo
+// Utilisation de cookie-parser
+  app.use(cookieParser('cookie-user'));
+//Fin Test cookie for pseudo
 
 
 //Routes du site
@@ -27,11 +34,6 @@ app.get('/', (req, res) => {
   })
 });
 
-
-
-
-
-
 app.get('/error404', (req, res) => {
   ejs.renderFile(__dirname + "\\error.ejs", {title: 'Erreur'}, (error, content) => {
     console.log(error);
@@ -44,16 +46,6 @@ app.get('/download', (req, res) => {
   const file = `${__dirname}/pdf/CV-Nathan_Gaulard.pdf`;
   res.download(file);
 }); 
-
-// Route for dynamic URL -> à utiliser
-app.get('/:id', (req, res) => {
-  const id = req.params.id;
-  ejs.renderFile(__dirname + '\\dynamic.ejs', {title: 'Dynamic URL', id}, (error, content) => {
-    console.log(error);
-    res.end(content);
-  });
-});
-
 
 
 // Gestion de session
@@ -117,6 +109,9 @@ io.on('connection', (socket) => {
   console.log('user connected');
   socket.on('chat message', (msg) => {
     io.emit('chat message', msg);
+  });
+  socket.on('nouveau pseudo', (pseudo) => {
+    console.log('Nouveau pseudo choisi : ${pseudo}');
   });
   socket.on('disconnect', () => {
     console.log('user disconnected');
