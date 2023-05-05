@@ -25,25 +25,31 @@
           <button type="submit">OK</button>
         </form>
         <div id="messages"></div>
-        <div id="pseudo-choisi"></div>
-        
+        <div id="pseudo-choisi">Pseudo : </div>
 
 
     <form id="form" action="">
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
 
+    <ul id="messages">
+      <% for(var i=0; i<chatHistory.length; i++) { %>
+        <li><strong></strong>: <%= chatHistory[i].message %><small><%= chatHistory[i].time %></small></li>
+      <% } %>
+    </ul>
+        
 
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+  
+    
 <script>
     const socket = io();
-    const user = 'Users';
     const messages = document.getElementById('messages');
     const form = document.getElementById('form');
     const input = document.getElementById('input');
+    const formPseudo = document.getElementById('form-pseudo');
+    const pseudoChoisi = document.getElementById('pseudo-choisi');
 
 //Gestion du chat
   form.addEventListener('submit', function(e) {
@@ -54,22 +60,23 @@
     }
   });
 
-  socket.on('chat message', function(msg) {
+  socket.on('chat message', function(msg, time) {
     var item = document.createElement('li');
-    item.textContent = pseudo + ' : ' + msg;
+    item.innerHTML = '<strong>' + pseudo + '</strong>' + ' : ' + msg + '    ' + time ;
     messages.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
   });
 
-
 // Gestion du cookie
-  $('#form-pseudo').submit((e) => {
-  e.preventDefault();
-  const pseudo = $('#pseudo').val();
-  socket.emit('nouveau-pseudo', pseudo);
-  // Stockage du pseudo dans un cookie nommé "pseudo"
-  document.cookie = `pseudo=${pseudo}; SameSite=Strict; path=/`;
-});
+formPseudo.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const pseudo = document.getElementById('pseudo').value;
+        socket.emit('nouveau-pseudo', pseudo);
+        // Stockage du pseudo dans un cookie nommé "pseudo"
+        document.cookie = `pseudo=${pseudo}; SameSite=Strict; path=/`;
+        // Affichage du pseudo choisi
+        pseudoChoisi.textContent = `Pseudo choisi : ${pseudo}`;
+      });
 
 // Fonction pour extraire la valeur d'un cookie
 function getCookie(name) {
@@ -80,7 +87,35 @@ function getCookie(name) {
 
 // Affichage du pseudo stocké dans le cookie "pseudo"
 const pseudo = getCookie('pseudo') || 'Anonyme';
-$('#pseudo-choisi').text(`Pseudo choisi : ${pseudo}`);
+$('#pseudo-choisi').html(`Pseudo choisi : ${pseudo}`);
+
+
+// History
+socket.emit('pseudo', pseudo);
+
+  // Réception de l'historique des messages
+  socket.on('chat history', function(history) {
+    var messages = document.getElementById('messages');
+    chatHistory = history;
+    for (var i = 0; i < history.length; i++) {
+      var item = document.createElement('li');
+      item.innerHTML = '<strong>' + history[i].pseudo + '</strong> : ' + history[i].message + ' (' + history[i].time + ')';
+      messages.appendChild(item);
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+  });
+
+  // Envoi d'un message au serveur
+  function sendMessage() {
+    var input = document.getElementById('messageInput');
+    var message = input.value;
+    socket.emit('chat message', message);
+    input.value = '';
+    return false;
+  }
+
+// Fin History
+
 
 </script>
 

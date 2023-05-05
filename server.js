@@ -105,19 +105,33 @@ app.post('/logout', (req, res) => {
 
 
 // Utilisation du Tchat
+
+let chatHistory = [];
+
 io.on('connection', (socket) => {
+  
   console.log('user connected');
+  
+  socket.emit('chat history', chatHistory);
+
   socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
+    const date = new Date();
+    const hour = date.getHours().toString().padStart(2, '0');
+    const minute = date.getMinutes().toString().padStart(2, '0');
+    const seconde = date.getSeconds().toString().padStart(2, '0');
+    const time = `${hour}:${minute}:${seconde}`;
+    chatHistory.push({ message: msg, time: time });
+    io.emit('chat message', msg, time);
   });
-  socket.on('nouveau pseudo', (pseudo) => {
+
+  socket.on('pseudo', (pseudo) => {
     console.log('Nouveau pseudo choisi : ${pseudo}');
   });
+  
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
 });
-
 
 //Lancement server
 server.listen(port, () => {
