@@ -1,7 +1,51 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Page de connexion</title>
+    <meta charset="UTF-8">
+    <style>
+      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    
+      h1 {
+        text-align: center;
+        margin-bottom: 0 auto;
+        text-align: center;
+      }
+
+      form {
+        width: 300px;
+        margin: 0 auto;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      .form_user {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      } 
+
+      .form_submit {
+        width: 100%;
+        padding: 10px;
+        background-color: #333;
+        color: #fff;
+        margin-bottom: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .form_submit:hover {
+        background-color: #555;
+      }
+    
+    </style>
+
   </head>
   <body>
     <%- include('parts/header.ejs') %>
@@ -9,10 +53,10 @@
     <h1>Page de connexion</h1>
     <form id="loginForm" action="/login" method="post">
       <label for="username">Nom d'utilisateur:</label>
-      <input type="text" id="username" name="username"><br>
+      <input class="form_user" type="text" id="username" name="username"><br>
       <label for="password">Mot de passe:</label>
-      <input type="password" id="password" name="password"><br>
-      <input type="submit" value="Se connecter">
+      <input class="form_user" type="password" id="password" name="password"><br>
+      <input class="form_submit" type="submit" value="Se connecter">
     </form>
 
     <%- include('parts/footer.ejs') %>
