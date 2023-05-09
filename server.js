@@ -1,37 +1,31 @@
 const express = require('express');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const url = require('url');
-const fs = require('fs');
 const ejs = require('ejs');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const { error } = require('console');
+const { error, time } = require('console');
 const io = new Server(server);
 const port = 8080
 
-
-// Utilisation de cookie-parser
-  app.use(cookieParser('cookie-user'));
-//Fin Test cookie for pseudo
+app.use(cookieParser('cookie-user'));
 app.use(express.static('public'));
 
-
 //Routes du site
+app.get('/', (req, res) => {
+  ejs.renderFile(__dirname + "\\home.ejs", {title: 'home'}, (error, content) => {
+  console.log(error);
+  res.end(content);
+})
+});
+
 app.get('/tchat', (req, res) => {
   ejs.renderFile(__dirname + '\\tchat.ejs', {title: 'Tchat', chatHistory: chatHistory}, (error, content) => {
     console.log(error);
     res.end(content);
   });
-});
-
-app.get('/', (req, res) => {
-    ejs.renderFile(__dirname + "\\home.ejs", {title: 'home'}, (error, content) => {
-    console.log(error);
-    res.end(content);
-  })
 });
 
 app.get('/error404', (req, res) => {
@@ -46,6 +40,7 @@ app.get('/download', (req, res) => {
   const file = `${__dirname}/pdf/CV-Nathan_Gaulard.pdf`;
   res.download(file);
 }); 
+
 
 // Gestion de session
 app.use(express.urlencoded({ extended: true }));
@@ -101,15 +96,17 @@ app.post('/logout', (req, res) => {
 });
 //Fin de gestion de projet
 
-
 // Utilisation du Tchat
 let chatHistory = [];
 
 io.on('connection', (socket) => {
   
+  const date2 = new Date();
+  const connectionTime = date2.toLocaleTimeString();
+
   console.log('user connected');
-  io.emit('chat message', { type: 'info', message: 'Un utilisateur s\'est connecté' });
-  
+  io.emit('chat message', 'Un utilisateur s\'est connecté à ', connectionTime);
+
   socket.emit('chat history', chatHistory);
 
   socket.on('chat message', (msg) => {
@@ -126,15 +123,17 @@ io.on('connection', (socket) => {
     chatHistory.push(message);
     io.emit('chat message', msg, time);
   });
-
-  socket.on('pseudo', (pseudo) => {
-    console.log('Nouveau pseudo choisi : ${pseudo}');
-  });
-  
+ 
   socket.on('disconnect', () => {
     console.log('user disconnected');
-    io.emit('chat message', { type: 'info', message: 'Un utilisateur s\'est déconnecté' });
+    io.emit('chat message', 'Un utilisateur s\'est déconnecté');
+
   });
+});
+
+// Route défault
+app.use((req, res) => {
+  res.redirect('/error404');
 });
 
 //Lancement server

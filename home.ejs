@@ -1,20 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
-
+    <title>Home</title>
     <style>
-      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+      body { 
+        margin: 0;
+        padding-bottom: 3rem; 
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+      }
+      
+        .recrutement {
+        margin: 3rem;
+        margin-top: 5rem;
+      }
+    
     </style>
-
-</head>
+  </head>
 <body>
 
-    <%- include('parts/header.ejs') %>
+  <%- include('parts/header.ejs') %>
 
-    <h1 style="text-align: center;">Bienvenue sur ma page Home</h1>
+  <section class="recrutement">
 
-    <%- include('parts/footer.ejs') %>
+    <h1 style="text-align: center; margin-bottom: 4rem;">Pourquoi me recruter dans votre entreprise</h1>
+
+    <p>Votre boîte bénéficierait grandement de mon recrutement pour plusieurs raisons. Tout d'abord, je possède une solide expérience dans le domaine spécifique de votre entreprise. Mon expertise approfondie me permettra d'apporter des connaissances pointues et des compétences spécialisées, ce qui contribuera à renforcer les performances et la qualité des projets que nous entreprendrons ensemble.</p>
+  
+    <p>Ensuite, ma capacité à m'adapter rapidement aux nouvelles situations et à résoudre les problèmes de manière efficace est un atout majeur. Je suis connu pour être créatif et innovant dans ma façon d'aborder les défis professionnels, ce qui me permet de proposer des solutions novatrices et d'atteindre des résultats exceptionnels.</p>
+  
+    <p>En outre, je suis un excellent communicateur et je suis à l'aise pour travailler en équipe. Je crois fermement à la collaboration et à la synergie des compétences pour accomplir des objectifs communs. Ma capacité à écouter activement, à exprimer mes idées clairement et à encourager les autres membres de l'équipe à contribuer pleinement favorisera un environnement de travail harmonieux et productif.</p>
+  
+    <p>Enfin, je suis passionné par mon domaine d'expertise et je suis constamment à l'affût des dernières tendances et des développements technologiques. Mon désir d'apprendre et de me perfectionner continuellement me permettra de rester à la pointe de mon domaine et de contribuer de manière significative à la croissance et à l'innovation de votre entreprise.</p>
+  
+    <p>En somme, mon expérience approfondie, ma capacité d'adaptation, mes compétences en communication et ma passion pour mon domaine font de moi un candidat idéal pour rejoindre votre équipe. Je suis convaincu que ma contribution sera précieuse pour votre entreprise et je suis impatient de participer activement à son succès.</p>
+
+  </section>
+
+  <%- include('parts/footer.ejs') %>
 
 
 </body>
