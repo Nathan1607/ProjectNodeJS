@@ -1,16 +1,45 @@
 <header>
-  <nav>
+  
+  <nav class="header">
     <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/tchat">Tchat</a></li>
-      <li><a href="/login">Login</a></li>
-      <li><a href="/download">Download</a></li>
-      <li><a href="/error404">Error 404</a></li>
+      <li class="li-header"><a href="/">Home</a></li>
+      <li class="li-header"><a href="/tchat">Tchat</a></li>
+      <li class="li-header"><a href="/download">Download</a></li>
+      <li class="li-header"><a href="/error404">Error 404</a></li>
+      <li class="li-header"><a href="/login">Login</a></li>
     </ul>
   </nav>
+
 </header>
 
 <style>
+
+.header {
+  display: flex;
+  justify-content: center;
+  background-color: gray;
+  padding: 1rem;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.li-header {
+  margin: 0 10px;
+}
+
+.li-header a {
+  text-decoration: none;
+  color: white;
+  font-size: 1.1rem;
+  padding-left: 1.5rem;
+}
+
+
 
 
 </style>
