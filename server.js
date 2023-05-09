@@ -9,6 +9,8 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const { error } = require('console');
+app.use(express.static('public'));
+
 const io = new Server(server);
 const port = 8080
 
@@ -21,7 +23,7 @@ const port = 8080
 
 //Routes du site
 app.get('/tchat', (req, res) => {
-  ejs.renderFile(__dirname + '\\tchat.ejs', {title: 'Tchat'}, (error, content) => {
+  ejs.renderFile(__dirname + '\\tchat.ejs', {title: 'Tchat', chatHistory: chatHistory}, (error, content) => {
     console.log(error);
     res.end(content);
   });
@@ -111,6 +113,7 @@ let chatHistory = [];
 io.on('connection', (socket) => {
   
   console.log('user connected');
+  io.emit('chat message', { type: 'info', message: 'Un utilisateur s\'est connecté' });
   
   socket.emit('chat history', chatHistory);
 
@@ -120,7 +123,12 @@ io.on('connection', (socket) => {
     const minute = date.getMinutes().toString().padStart(2, '0');
     const seconde = date.getSeconds().toString().padStart(2, '0');
     const time = `${hour}:${minute}:${seconde}`;
-    chatHistory.push({ message: msg, time: time });
+    const message = {
+      pseudo: socket.pseudo,
+      content: msg,
+      time: time
+    };
+    chatHistory.push(message);
     io.emit('chat message', msg, time);
   });
 
@@ -130,6 +138,7 @@ io.on('connection', (socket) => {
   
   socket.on('disconnect', () => {
     console.log('user disconnected');
+    io.emit('chat message', { type: 'info', message: 'Un utilisateur s\'est déconnecté' });
   });
 });
 
