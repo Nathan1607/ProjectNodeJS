@@ -1,9 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
     <title>Page d'administration</title>
+    <style>
+      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+      
+      h1 {
+        color: #333;
+        font-size: 2rem;
+        margin-bottom: 20px;
+        text-align: center;
+        margin-top: 3rem;
+      }
+
+      #welcomeMessage {
+        color: #666;
+        font-size: 18px;
+        margin-bottom: 40px;
+        text-align: center;
+      }
+
+      form {
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }  
+
+      button:hover {
+        background-color: #0056b3;
+      } 
+    </style>
   </head>
+
   <body>
+    <%- include('parts/header.ejs') %>
+
     <h1>Page d'administration</h1>
     <div id="welcomeMessage"><%= message %></div>
   
@@ -11,6 +51,7 @@
       <button type="submit">Deconnexion</button>
     </form>
     
+    <%- include('parts/footer.ejs') %>
 
   </body>
 </html>

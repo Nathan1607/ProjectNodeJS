@@ -9,16 +9,14 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const { error } = require('console');
-app.use(express.static('public'));
-
 const io = new Server(server);
 const port = 8080
 
 
-//Test Cookie for pseudo
 // Utilisation de cookie-parser
   app.use(cookieParser('cookie-user'));
 //Fin Test cookie for pseudo
+app.use(express.static('public'));
 
 
 //Routes du site
@@ -48,7 +46,6 @@ app.get('/download', (req, res) => {
   const file = `${__dirname}/pdf/CV-Nathan_Gaulard.pdf`;
   res.download(file);
 }); 
-
 
 // Gestion de session
 app.use(express.urlencoded({ extended: true }));
@@ -88,10 +85,9 @@ app.get('/admin', (req, res) => {
       res.end(content);
     });
   } else {
-    res.redirect('/');
+    res.redirect('/error404');
   }
 });
-
 
 //Deconnexion
 app.post('/logout', (req, res) => {
@@ -107,7 +103,6 @@ app.post('/logout', (req, res) => {
 
 
 // Utilisation du Tchat
-
 let chatHistory = [];
 
 io.on('connection', (socket) => {

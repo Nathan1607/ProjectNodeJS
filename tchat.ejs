@@ -1,20 +1,64 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!--<style>
+    <title>Tchat</title>
+    <style>
       body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+      h1 {
+        text-align: center;
+      }
+
+      #form-pseudo {
+        margin-bottom: 20px;
+        margin-left: 3rem;
+      }
+
+      #form-pseudo label {
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+
+      #form-pseudo input[type="text"] {
+        padding: 5px;
+        font-size: 16px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      } 
+
+      #form-pseudo button[type="submit"] {
+        padding: 5px 10px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      #form-pseudo button[type="submit"]:hover {
+        background-color: #0056b3;
+      }
+
+      #pseudo-choisi {
+        margin-bottom: 1rem;
+        margin-left: 3rem;
+        font-weight: bold;
+      }
 
       #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
       #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
       #input:focus { outline: none; }
       #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
-
+      
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages > li { padding: 0.5rem 1rem; }
-      #messages > li:nth-child(odd) { background: #efefef; }
-    </style>-->
+      #messages > li:nth-child(odd) { background: #efefef; } 
+    </style>
   </head>
+  
   <body>
+
     <%- include('parts/header.ejs') %>
 
     <h1>Tchat en ligne</h1>
@@ -24,21 +68,21 @@
           <input type="text" id="pseudo" name="pseudo">
           <button type="submit">OK</button>
         </form>
-        <div id="messages"></div>
         <div id="pseudo-choisi">Pseudo : </div>
 
+
+      <div id="messages">
+        <% for(var i=0; i<chatHistory.length; i++) { %>
+          <li><strong><%= chatHistory[i].pseudo %></strong>: <%= chatHistory[i].content %><small><%= chatHistory[i].time %></small></li>
+        <% } %>
+      </div>    
+
+      <div id="messages"></div>
 
     <form id="form" action="">
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
-
-    <ul id="messages">
-      <% for(var i=0; i<chatHistory.length; i++) { %>
-        <li><strong><%= chatHistory[i].pseudo %></strong>: <%= chatHistory[i].content %><small><%= chatHistory[i].time %></small></li>
-        <% } %>
-    </ul>
-        
-
+       
 
     <script src="/socket.io/socket.io.js"></script>
   
@@ -72,11 +116,9 @@ formPseudo.addEventListener('submit', (e) => {
         e.preventDefault();
         const pseudo = document.getElementById('pseudo').value;
         socket.emit('nouveau-pseudo', pseudo);
-        // Stockage du pseudo dans un cookie nommé "pseudo"
         document.cookie = `pseudo=${pseudo}; SameSite=Strict; path=/`;
-        // Affichage du pseudo choisi
-        pseudoChoisi.textContent = `Pseudo choisi : ${pseudo}`;
-      });
+        location.reload();
+});
 
 // Fonction pour extraire la valeur d'un cookie
 function getCookie(name) {
@@ -86,24 +128,17 @@ function getCookie(name) {
 }
 
 // Affichage du pseudo stocké dans le cookie "pseudo"
+const pseudo2 = document.getElementById('pseudo-choisi');
 const pseudo = getCookie('pseudo') || 'Anonyme';
-$('#pseudo-choisi').html(`Pseudo choisi : ${pseudo}`);
+
+if (pseudo) {
+  pseudoChoisi.textContent = `Pseudo : ${pseudo}`;
+}
+
 
 
 // History
 socket.emit('pseudo', pseudo);
-/*
-  // Réception de l'historique des messages
-  socket.on('chat history', function(history) {
-    var messages = document.getElementById('messages');
-    chatHistory = history;
-    for (var i = 0; i < history.length; i++) {
-      var item = document.createElement('li');
-      item.innerHTML = '<strong>' + history[i].pseudo + '</strong> : ' + history[i].message + ' (' + history[i].time + ')';
-      messages.appendChild(item);
-      window.scrollTo(0, document.body.scrollHeight);
-    }
-  });*/
 
   // Envoi d'un message au serveur
   function sendMessage() {
@@ -114,8 +149,6 @@ socket.emit('pseudo', pseudo);
     return false;
   }
 // Fin History
-
-
 
 </script>
 
